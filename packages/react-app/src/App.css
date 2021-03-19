@@ -1,0 +1,47 @@
+.account {
+  text-align: left;
+  padding: 1rem 1.5rem;
+}
+
+.todo-list {
+  margin-top: 2rem;
+}
+.todo-list__header {
+  margin-bottom: 1.3rem;
+  font-size: 1.8rem;
+}
+
+.container {
+  padding: 0 30px;
+}
+.mobile-spacer {
+  margin: 0.5rem 0;
+}
+.text-center {
+  text-align: center;
+}
+.mt-4 {
+  margin-top: 1rem;
+}
+.mt-8 {
+  margin-top: 2rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .mobile-spacer {
+    margin: 0;
+  }
+}
+
+@media (min-width: 992px) {
+  .todo-list {
+    margin-top: 0;
+  }
+  .account {
+    text-align: right;
+    padding: 1rem;
+  }
+}
