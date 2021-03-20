@@ -14,7 +14,7 @@ import { Transactor } from "./helpers";
 import { formatEther, parseEther } from "@ethersproject/units";
 import { utils } from "ethers";
 //import Hints from "./Hints";
-import { Hints, ExampleUI, Subgraph } from "./views"
+import { Hints, ExampleUI, Subgraph, CreateNFT } from "./views"
 import { INFURA_ID, DAI_ADDRESS, DAI_ABI, NETWORK, NETWORKS } from "./constants";
 import StackGrid from "react-stack-grid";
 import ReactJson from 'react-json-view'
@@ -47,7 +47,7 @@ console.log("📦 Assets: ",assets)
 */
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS['localhost']; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS['rinkeby']; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true
@@ -176,23 +176,23 @@ function App(props) {
   useEffect(()=>{
     const updateYourCollectibles = async () => {
       let collectibleUpdate = []
-      for(let tokenIndex=0;tokenIndex<balance;tokenIndex++){
+      for(let tokenIndex = 0; tokenIndex < balance; tokenIndex ++){
         try{
-          console.log("GEtting token index",tokenIndex)
+          console.log("GEtting token index", tokenIndex)
           const tokenId = await readContracts.YourCollectible.tokenOfOwnerByIndex(address, tokenIndex)
-          console.log("tokenId",tokenId)
+          console.log("tokenId", tokenId)
           const tokenURI = await readContracts.YourCollectible.tokenURI(tokenId)
-          console.log("tokenURI",tokenURI)
+          console.log("tokenURI", tokenURI)
 
           const ipfsHash =  tokenURI.replace("https://ipfs.io/ipfs/","")
-          console.log("ipfsHash",ipfsHash)
+          console.log("ipfsHash", ipfsHash)
 
           const jsonManifestBuffer = await getFromIPFS(ipfsHash)
 
           try{
             const jsonManifest = JSON.parse(jsonManifestBuffer.toString())
             console.log("jsonManifest",jsonManifest)
-            collectibleUpdate.push({ id:tokenId, uri:tokenURI, owner: address, ...jsonManifest })
+            collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, ...jsonManifest })
           }catch(e){console.log(e)}
 
         }catch(e){console.log(e)}
@@ -347,6 +347,9 @@ function App(props) {
           <Menu.Item key="/">
             <Link onClick={()=>{setRoute("/")}} to="/">Gallery</Link>
           </Menu.Item>
+          <Menu.Item key="/create-nft">
+            <Link onClick={()=>{setRoute("/create-nft")}} to="/create-nft">Create</Link>
+          </Menu.Item>
           <Menu.Item key="/yourcollectibles">
             <Link onClick={()=>{setRoute("/yourcollectibles")}} to="/yourcollectibles">YourCollectibles</Link>
           </Menu.Item>
@@ -383,7 +386,13 @@ function App(props) {
             </div>
 
           </Route>
-
+          <Route path="/create-nft">
+            <CreateNFT 
+              address={address}
+              readContracts={readContracts}
+              writeContracts={writeContracts}
+            />
+          </Route>
           <Route path="/yourcollectibles">
             <div style={{ width:640, margin: "auto", marginTop:32, paddingBottom:32 }}>
               <List
@@ -521,6 +530,13 @@ function App(props) {
               </pre>
           </Route>
           <Route path="/debugcontracts">
+              <Contract
+                name="VRF"
+                signer={userProvider.getSigner()}
+                provider={localProvider}
+                address={address}
+                blockExplorer={blockExplorer}
+              />
               <Contract
                 name="YourCollectible"
                 signer={userProvider.getSigner()}

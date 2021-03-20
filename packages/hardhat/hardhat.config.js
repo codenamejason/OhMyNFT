@@ -18,7 +18,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 // Select the network you want to deploy to here:
 //
-const defaultNetwork = "localhost";
+const defaultNetwork = "rinkeby";
 
 function mnemonic() {
   try {
@@ -91,6 +91,13 @@ module.exports = {
         mnemonic: mnemonic(),
       },
     },
+    mumbai: {
+      url: 'https://rpc-mumbai.maticvigil.com/v1/26456f4c943734f54cb06ae8a29cdd850084d174',
+      gasPrice: 1000000000,
+      accounts: {
+        mnemonic: mnemonic(),
+      },
+    },
   },
   solidity: {
     compilers: [
@@ -114,6 +121,15 @@ module.exports = {
       },
       {
         version: "0.6.7",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        }
+      },
+      {
+        version: "0.6.6",
         settings: {
           optimizer: {
             enabled: true,

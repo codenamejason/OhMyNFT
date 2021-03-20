@@ -1,12 +1,6 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "bytes32[]",
-        "name": "assetsForSale",
-        "type": "bytes32[]"
-      }
-    ],
+    "inputs": [],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
