@@ -1,4 +1,4 @@
-# 🏗 scaffold-eth - 🎟 Simple NFT Example
+# 🏗 scaffold-eth - 🎟 Oh My NFT
 
 > Mint and display NFTs on Ethereum with a full example app...
 
@@ -7,11 +7,11 @@
 ## quickstart
 
 ```bash
-git clone https://github.com/austintgriffith/scaffold-eth.git simple-nft-example
+git clone https://github.com/codenamejason/OhMyNFT buyer-mints-nft
 
-git checkout simple-nft-example
+git checkout buyer-mints-nft
 
-cd simple-nft-example
+cd buyer-mints-nft
 ```
 
 ```bash
@@ -29,7 +29,7 @@ yarn start
 > in a second terminal window:
 
 ```bash
-cd simple-nft-example
+cd buyer-mints-nft
 yarn chain
 
 ```
@@ -37,42 +37,13 @@ yarn chain
 > in a third terminal window:
 
 ```bash
-cd simple-nft-example
+cd buyer-mints-nft
 yarn deploy
 
 ```
 
 📱 Open http://localhost:3000 to see the app
 
----
-
-> ✏️ Edit the mint script `mint.js` in `packages/hardhat/scripts` and update the `toAddress` to your frontend address (wallet address in the top right).
-
-![image](https://user-images.githubusercontent.com/2653167/109536489-03e77a80-7a7b-11eb-8464-4876dc22547c.png)
-
-
-> in a fourth terminal window run the mint script:
-
-```bash
-cd simple-nft-example
-yarn mint
-
-```
-
-![image](https://user-images.githubusercontent.com/2653167/109536688-44df8f00-7a7b-11eb-9382-7205f927c628.png)
-
-👀 You should see your collectibles show up if you minted to the correct address:
-
-![image](https://user-images.githubusercontent.com/2653167/109536827-6c365c00-7a7b-11eb-8482-2a7bb33a1bb5.png)
-
-👛 Open an *incognito* window and navigate to http://localhost:3000 (You'll notice it has a new wallet address).
-
-🎟 Send an NFT to the *incognito* window address:
-
-![image](https://user-images.githubusercontent.com/2653167/109536955-925bfc00-7a7b-11eb-855d-bf1523ac524d.png)
-
-
----
 
 🕵🏻‍♂️ Inspect the `Debug Contracts` tab to figure out what address is the `owner` of `YourCollectible`?
 
@@ -118,28 +89,6 @@ yarn deploy
 You should see the correct network in the frontend:
 
 ![image](https://user-images.githubusercontent.com/2653167/109539305-655d1880-7a7e-11eb-9385-c169645dc2b5.png)
-
----
-
-🎫 Ready to mint a batch of NFTs for reals?
-
-```bash
-yarn mint
-```
-
-![image](https://user-images.githubusercontent.com/2653167/109539529-a5240000-7a7e-11eb-8d58-6dd7a14e1454.png)
-
----
-
-## ⚔️ Side Quests
-
-#### 🐟 Open Sea
-
-> Add your contract to OpenSea ( create -> submit NFTs -> "or add an existing contract" )
-
-(It can take a while before they show up, but here is an example:)
-
-https://testnets.opensea.io/assets/0xc2839329166d3d004aaedb94dde4173651babccf/1
 
 ---
 

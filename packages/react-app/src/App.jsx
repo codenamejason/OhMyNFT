@@ -47,7 +47,7 @@ const ipfs = ipfsAPI({host: 'ipfs.infura.io', port: '5001', protocol: 'https' })
 */
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS['rinkeby']; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS['mumbai']; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true
@@ -109,7 +109,7 @@ function App(props) {
   const mainnetProvider = (scaffoldEthProvider && scaffoldEthProvider._network) ? scaffoldEthProvider : mainnetInfura
   const [injectedProvider, setInjectedProvider] = useState();
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
-  const price = useExchangePrice(targetNetwork,mainnetProvider);
+  const price = useExchangePrice(targetNetwork, mainnetProvider);
 
   /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
   const gasPrice = useGasPrice(targetNetwork,"fast");
@@ -181,7 +181,7 @@ function App(props) {
       let collectibleUpdate = []
       for(let tokenIndex = 0; tokenIndex < balance; tokenIndex ++){
         try{
-          console.log("GEtting token index", tokenIndex)
+          console.log("Getting token index", tokenIndex)
           const tokenId = await readContracts.YourCollectible.tokenOfOwnerByIndex(address, tokenIndex)
           console.log("tokenId", tokenId)
           const tokenURI = await readContracts.YourCollectible.tokenURI(tokenId)
@@ -394,6 +394,7 @@ function App(props) {
               address={address}
               readContracts={readContracts}
               writeContracts={writeContracts}
+              tx={tx}
             />
           </Route>
           <Route path="/yourcollectibles">
