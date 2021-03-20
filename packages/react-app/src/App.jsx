@@ -25,7 +25,7 @@ const { BufferList } = require('bl')
 const ipfsAPI = require('ipfs-http-client');
 const ipfs = ipfsAPI({host: 'ipfs.infura.io', port: '5001', protocol: 'https' })
 
-console.log("📦 Assets: ",assets)
+//console.log("📦 Assets: ", assets)
 
 /*
     Welcome to 🏗 scaffold-eth !
@@ -89,8 +89,10 @@ const getFromIPFS = async hashToGet => {
 if(DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
 // const mainnetProvider = getDefaultProvider("mainnet", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
 // const mainnetProvider = new InfuraProvider("mainnet",INFURA_ID);
-const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
+//const mainnetProvider = new JsonRpcProvider("https://rpc.scaffoldeth.io:48544")
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID)
+const scaffoldEthProvider = new JsonRpcProvider("https://rpc.scaffoldeth.io:48544")
+const mainnetInfura = new JsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
 
 // 🏠 Your local provider is usually pointed at your local blockchain
 const localProviderUrl = targetNetwork.rpcUrl;
@@ -104,6 +106,7 @@ const blockExplorer = targetNetwork.blockExplorer;
 
 
 function App(props) {
+  const mainnetProvider = (scaffoldEthProvider && scaffoldEthProvider._network) ? scaffoldEthProvider : mainnetInfura
   const [injectedProvider, setInjectedProvider] = useState();
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
   const price = useExchangePrice(targetNetwork,mainnetProvider);
@@ -113,14 +116,14 @@ function App(props) {
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
   const userProvider = useUserProvider(injectedProvider, localProvider);
   const address = useUserAddress(userProvider);
-  if(DEBUG) console.log("👩‍💼 selected address:",address)
+  if(DEBUG) console.log("👩‍💼 selected address:", address)
 
   // You can warn the user if you would like them to be on a specific network
   let localChainId = localProvider && localProvider._network && localProvider._network.chainId
-  if(DEBUG) console.log("🏠 localChainId",localChainId)
+  if(DEBUG) console.log("🏠 localChainId", localChainId)
 
   let selectedChainId = userProvider && userProvider._network && userProvider._network.chainId
-  if(DEBUG) console.log("🕵🏻‍♂️ selectedChainId:",selectedChainId)
+  if(DEBUG) console.log("🕵🏻‍♂️ selectedChainId:", selectedChainId)
 
   // For more hooks, check out 🔗eth-hooks at: https://www.npmjs.com/package/eth-hooks
 
@@ -132,19 +135,19 @@ function App(props) {
 
   // 🏗 scaffold-eth is full of handy hooks like this one to get your balance:
   const yourLocalBalance = useBalance(localProvider, address);
-  if(DEBUG) console.log("💵 yourLocalBalance",yourLocalBalance?formatEther(yourLocalBalance):"...")
+  //if(DEBUG) console.log("💵 yourLocalBalance",yourLocalBalance?formatEther(yourLocalBalance):"...")
 
   // Just plug in different 🛰 providers to get your balance on different chains:
-  const yourMainnetBalance = useBalance(mainnetProvider, address);
-  if(DEBUG) console.log("💵 yourMainnetBalance",yourMainnetBalance?formatEther(yourMainnetBalance):"...")
+  //const yourMainnetBalance = useBalance(mainnetProvider, address);
+  //if(DEBUG) console.log("💵 yourMainnetBalance",yourMainnetBalance?formatEther(yourMainnetBalance):"...")
 
   // Load in your local 📝 contract and read a value from it:
   const readContracts = useContractLoader(localProvider)
-  if(DEBUG) console.log("📝 readContracts",readContracts)
+  if(DEBUG) console.log("📝 readContracts", readContracts)
 
   // If you want to make 🔐 write transactions to your contracts, use the userProvider:
   const writeContracts = useContractLoader(userProvider)
-  if(DEBUG) console.log("🔐 writeContracts",writeContracts)
+  if(DEBUG) console.log("🔐 writeContracts", writeContracts)
 
   // EXTERNAL CONTRACT EXAMPLE:
   //
@@ -158,12 +161,12 @@ function App(props) {
   //
 
   // keep track of a variable from the contract in the local React state:
-  const balance = useContractReader(readContracts,"YourCollectible", "balanceOf", [ address ])
-  console.log("🤗 balance:",balance)
+  const balance = useContractReader(readContracts, "YourCollectible", "balanceOf", [ address ])
+  //console.log("🤗 balance:",balance)
 
   //📟 Listen for broadcast events
   const transferEvents = useEventListener(readContracts, "YourCollectible", "Transfer", localProvider, 1);
-  console.log("📟 Transfer events:",transferEvents)
+  console.log("📟 Transfer events:", transferEvents)
 
 
 
@@ -184,7 +187,7 @@ function App(props) {
           const tokenURI = await readContracts.YourCollectible.tokenURI(tokenId)
           console.log("tokenURI", tokenURI)
 
-          const ipfsHash =  tokenURI.replace("https://ipfs.io/ipfs/","")
+          const ipfsHash =  tokenURI.replace("https://ipfs.io/ipfs/", "")
           console.log("ipfsHash", ipfsHash)
 
           const jsonManifestBuffer = await getFromIPFS(ipfsHash)
@@ -296,7 +299,7 @@ function App(props) {
 
   let galleryList = []
   for(let a in loadedAssets){
-    console.log("loadedAssets",a,loadedAssets[a])
+    //console.log("loadedAssets",a,loadedAssets[a])
 
     let cardActions = []
     if(loadedAssets[a].forSale){

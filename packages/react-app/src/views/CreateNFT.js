@@ -5,6 +5,19 @@ import { SyncOutlined, InboxOutlined, UploadOutlined, StarOutlined } from '@ant-
 import { Address, Balance } from "../components";
 import { parseEther, formatEther } from "@ethersproject/units";
 
+/** Zora Integration */
+import { Zora } from '@zoralabs/zdk';
+import { Wallet } from 'ethers';
+
+const wallet = Wallet.createRandom();
+const rinkebyZora = new Zora(wallet, 4);
+console.log(rinkebyZora)
+// The constructor can optionally accept two parameters to override the official supported Zora Protocol addresses.
+//const localZora = new Zora(wallet, 50, 'media contract address', 'market contract address');
+const mainnetZora = new Zora(wallet, 1);
+
+
+
 const { Dragger } = Upload;
 
 
@@ -52,11 +65,17 @@ const CreateNFT = ({ address, readContracts, writeContracts }) => {
 
         const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
-        };
+    };
+
+        const getTotalSupply = async () => {
+            const reslutOfTotalSupply = await rinkebyZora.totalSupply();
+            console.log(reslutOfTotalSupply);
+        }
 
         return (
             <>
             <h3>Create An NFT</h3>
+            <Button onClick={getTotalSupply}>Get Total Supply</Button>
             <Form
                 form={form}
                 name='nft_info'
@@ -83,7 +102,7 @@ const CreateNFT = ({ address, readContracts, writeContracts }) => {
                             name={`Attribute`}
                             rules={[
                             {
-                                required: true,
+                                required: false,
                                 message: 'Input something!',
                             },
                             ]}
