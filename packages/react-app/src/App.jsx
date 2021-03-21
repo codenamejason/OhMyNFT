@@ -281,6 +281,7 @@ function App(props) {
   const [ transferToAddresses, setTransferToAddresses ] = useState({})
 
   const [ loadedAssets, setLoadedAssets ] = useState()
+
   useEffect(()=>{
     const updateYourCollectibles = async () => {
       let assetUpdate = []
@@ -313,12 +314,6 @@ function App(props) {
         </div>
       )
     }
-
-    /*cardActions.push(
-      <div>
-        2
-      </div>
-    )*/
 
     galleryList.push(
       <Card style={{width:200}} key={loadedAssets[a].name}
@@ -359,7 +354,7 @@ function App(props) {
           <Menu.Item key="/transfers">
             <Link onClick={()=>{setRoute("/transfers")}} to="/transfers">Transfers</Link>
           </Menu.Item>
-          <Menu.Item key="/ipfsup">
+          {/* <Menu.Item key="/ipfsup">
             <Link onClick={()=>{setRoute("/ipfsup")}} to="/ipfsup">IPFS Upload</Link>
           </Menu.Item>
           <Menu.Item key="/ipfsdown">
@@ -367,7 +362,7 @@ function App(props) {
           </Menu.Item>
           <Menu.Item key="/debugcontracts">
             <Link onClick={()=>{setRoute("/debugcontracts")}} to="/debugcontracts">Debug Contracts</Link>
-          </Menu.Item>
+          </Menu.Item> */}
         </Menu>
 
         <Switch>
