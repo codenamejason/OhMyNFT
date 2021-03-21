@@ -39,39 +39,14 @@ let STARTING_JSON_NFT = {
  }
 
 const CreateNFT = ({ address, readContracts, writeContracts, tx }) => {
-    const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState('')
-    const [form] = Form.useForm();
-    const [image, setImage] = useState(null);
+    const [loading, setLoading] = useState(true);
+    //const [imageUrl, setImageUrl] = useState('')
+    //const [form] = Form.useForm();
     const [b64Image, setb64Image] = useState(null);
     const [imageHash, setImageHash] = useState();
     const [imageUri, setImageUri] = useState();
-    const [file, setFile] = useState();
-    const [fileList, setFileList] = useState([])
-    const [images, setImages] = useState([]);
-
-    // const addImageToIpfs = async (uploadedImages) => {
-    //     console.log('item', uploadedImages)
-    //     await mergeImages([
-    //         { src: sampleImage }
-    //     ], {}).then(b64 => {
-    //         let imageBuffer = Buffer.from(b64.split(',')[1], 'base64');
-    //         const imageResult = ipfs.add(imageBuffer)
-    //             .then((res) => {
-    //                 setImageHash(res.path);
-    //                 setImageUri('https://ipfs.io/ipfs/' + res.path);
-    //             })
-    //     })
-    //     // get image and send to ipfs
-    //     uploadedImages.map((item, index) => {
-    //         console.log(index, item)
-    //     })
-
-        
-    //     // merge if more than one image and convert to base64
-        
-    // }
-
+    const [nftJsonHash, setNftJsonHash] = useState()
+    
     const uploadJsonToIpfs = async(item) => {
         console.log('Image', item.name)
         await mergeImages([
@@ -87,8 +62,8 @@ const CreateNFT = ({ address, readContracts, writeContracts, tx }) => {
                     STARTING_JSON_NFT.external_url = 'https://ipfs.io/ipfs/' + res.path;
                     STARTING_JSON_NFT.name = 'Scaffold-Eth'
                     STARTING_JSON_NFT.attributes[0] = { 'trait_type': 'Gender', 'value': 'Male' }
-                    setImageHash(res.path);
-                    setImageUri('https://ipfs.io/ipfs/' + res.path);
+                    //setImageHash(res.path);
+                    //setImageUri('https://ipfs.io/ipfs/' + res.path);
                     console.log('image result', res)
 
                     ipfs.add(JSON.stringify(STARTING_JSON_NFT))
@@ -103,22 +78,34 @@ const CreateNFT = ({ address, readContracts, writeContracts, tx }) => {
         console.log('Received values of form: ', values);
     };
 
+    const updateJsonToIpfs = () => {
+        STARTING_JSON_NFT.description = 'Testing out minting';
+        STARTING_JSON_NFT.image = imageUri;
+        STARTING_JSON_NFT.external_url = imageUri;
+        STARTING_JSON_NFT.name = 'Scaffold-Eth'
+        STARTING_JSON_NFT.attributes[0] = { 'trait_type': 'Gender', 'value': 'Male' }
+
+        ipfs.add(JSON.stringify(STARTING_JSON_NFT))
+            .then((res) => {
+                console.log(res);
+                setNftJsonHash(res.path);
+                setLoading(false);
+            })
+    }
+
     const props = {
         name: 'file',
-        action: uploadJsonToIpfs,
-        showUploadList: false,
-        onChange(info) {
-          if (info.file.status !== 'uploading') {
-            console.log(info.file, info.fileList);
-            setFile(info.file);
-            setFileList(info.fileList);
-          }
-          if (info.file.status === 'done') {
-            message.success(`${info.file.name} file uploaded successfully`);
-          } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
-          }
+        action: (file) => {
+            console.log(file)
+            ipfs.add(file)
+                .then((res) => {
+                    console.log('hash', res);
+                    setImageHash(res.path);
+                    setImageUri(`https://ipfs.io/ipfs/${res.path}`);
+                    setLoading(false);
+                });
         },
+        showUploadList: false,
     };
 
     // const getTotalSupply = async () => {
@@ -127,13 +114,9 @@ const CreateNFT = ({ address, readContracts, writeContracts, tx }) => {
     //     //console.log(reslutOfTotalSupply);
     // }
 
-    const onDrop = (uploadedImages) => {
-        setImages(uploadedImages);
-        uploadJsonToIpfs(uploadedImages);
-    }
-
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [selectedFile, setSelectedFile] = useState(null)
     
     return (
         <div style={{ margin: 10 }}>
@@ -144,6 +127,12 @@ const CreateNFT = ({ address, readContracts, writeContracts, tx }) => {
         <Upload {...props}>
             <Button icon={<UploadOutlined />}>Click to Upload</Button>
         </Upload>
+        {/* <input type='file' name='file' onChange={(event) => {
+            console.log(event.target.value)
+            console.log(event.target.files[0])
+            const data = new FormData();
+            data.append('file', selectedFile);
+        }} /> */}
         {/* <ImageUploader
             withIcon={true}
             buttonText='Choose images'
@@ -168,7 +157,7 @@ const CreateNFT = ({ address, readContracts, writeContracts, tx }) => {
                     <Input.TextArea type='text' onChange={(event) => { console.log(event.target.value)}} />                   
                 </Col>
                 <Col span={8}>
-                    <img src={b64Image} style={{ maxWidth: 150 }} />
+                    <img src={imageUri} style={{ maxWidth: 150 }} />
                 </Col>
             </Row><br />
             <Row>
@@ -217,17 +206,15 @@ const CreateNFT = ({ address, readContracts, writeContracts, tx }) => {
                         )}
                     </Form.List>
                     <Form.Item>
-                    <Button onClick={() => {
-                            tx( writeContracts.YourCollectible.mintItem('QmZKpLrKUdx9h14Rio3YXwQz3GjijtdbKvo4kwf85EQtPs') )
+                    <Button disabled={loading} onClick={() => {
+                            updateJsonToIpfs();
+                            tx( writeContracts.YourCollectible.mintItem(nftJsonHash) )
                         }}>Mint NFT</Button>
                     </Form.Item>
                     </Form>
                 </Col>                
             </Row>     
         
-        {fileList.map((item, index) => {
-            console.log(index, item.name, item.type, item.size)
-        })}
         </div>
     )
 }
