@@ -99,6 +99,8 @@ const CreateNFT = ({ address, readContracts, writeContracts, tx }) => {
             })
     }
 
+   
+
     return (
         <div style={{ margin: 10, marginLeft: 50 }}>
         <h3>Create An NFT</h3>
@@ -175,7 +177,7 @@ const CreateNFT = ({ address, readContracts, writeContracts, tx }) => {
             style={{ margin: 15, textAlign: 'center', alignContent: 'center' }}
             gutter={24}>
                 <Col span={15}>
-                    <Form name="dynamic_form_nest_item" autoComplete="off">
+                    <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
                         <Form.List name="users">
                             {(fields, { add, remove }) => (
                             <>
