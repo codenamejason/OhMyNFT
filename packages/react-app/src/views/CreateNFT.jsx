@@ -7,7 +7,7 @@ import { parseEther, formatEther } from "@ethersproject/units";
 import mergeImages from 'merge-images';
 import sampleImage from '../images/scaffold-eth.png';
 
-const { BufferList } = require('bl');
+//const { BufferList } = require('bl');
 // https://www.npmjs.com/package/ipfs-http-client
 const ipfsAPI = require('ipfs-http-client');
 const Hash = require('ipfs-only-hash');
